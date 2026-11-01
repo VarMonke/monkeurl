@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}monkeurl — link rescue{% endblock %}</title>
+  <style>
+    :root { --bg: #F6F5F4; --fg: #3E3E3D; --dim: #8B8884; --card: #FDFDFC;
+            --line: #E5E3E0; --accent: #3E3E3D; --danger: #C2452D; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo,
+           Consolas, monospace; background: var(--bg); color: var(--fg); }
+    main { max-width: 46rem; margin: 4rem auto; padding: 0 1.25rem; }
+    h1 { font-size: 1.4rem; font-weight: 700; }
+    h1 a { color: var(--accent); text-decoration: none; }
+    .card { background: var(--card); border: 1px solid var(--line);
+            padding: 1.25rem 1.5rem; margin: 1rem 0;
+            box-shadow: 0 1px 3px rgba(62, 62, 61, .06); }
+    label { font-size: .9rem; }
+    input[type=text], input[type=url], input[type=number], select {
+      width: 100%; padding: .6rem .7rem; margin: .35rem 0 .8rem;
+      background: #fff; border: 1px solid var(--line); color: var(--fg);
+      font-family: inherit; }
+    input:focus, select:focus { outline: 2px solid var(--accent);
+      outline-offset: -1px; }
+    button { background: var(--accent); color: var(--bg); border: 0;
+             padding: .65rem 1.4rem; font-weight: 700;
+             font-family: inherit; cursor: pointer; }
+    button:hover { filter: brightness(1.1); }
+    .error { color: var(--danger); }
+    .ok { color: var(--accent); word-break: break-all; }
+    .dim { color: var(--dim); font-size: .85rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    td, th { text-align: left; padding: .3rem .5rem;
+             border-bottom: 1px solid var(--line); }
+    .links-table { table-layout: fixed; }
+    .links-table th, .links-table td { vertical-align: middle; }
+    .links-table .destination { overflow: hidden; text-overflow: ellipsis;
+                                white-space: nowrap; }
+    .links-table .clicks { text-align: right; }
+    .links-table .action { text-align: right; white-space: nowrap; }
+    nav { font-size: .85rem; }
+    nav a { color: var(--dim); }
+    header.top { display: flex; justify-content: space-between;
+                 align-items: flex-start; margin-bottom: 1.5rem; gap: 1rem; }
+    header.top h1 { margin: 0; }
+    a.btn { display: inline-block; background: var(--accent);
+            color: var(--bg); padding: .45rem 1.1rem; font-weight: 700;
+            text-decoration: none; font-size: .85rem; white-space: nowrap; }
+    a.btn:hover { filter: brightness(1.15); }
+    img.qr { width: 140px; border: 1px solid var(--line); }
+  </style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <h1><a href="/">monkeurl</a><br>
+    <span class="dim">>>> give monke url. monke give shorter url.</span></h1>
+    <nav class="dim">
+      {% if user.is_authenticated %}
+        <a class="btn" href="{% url 'profile' %}">profile</a>
+      {% else %}
+        <a class="btn" href="/accounts/google/login/">sign in</a>
+      {% endif %}
+    </nav>
+  </header>
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

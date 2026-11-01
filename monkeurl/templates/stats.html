@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}stats — {{ link.id }}{% endblock %}
+{% block content %}
+<div class="card">
+  <div><a class="ok" href="{{ short_url }}">{{ short_url }}</a></div>
+  <div class="dim">→ {{ link.origin }}</div>
+  <table>
+    <tr><td>clicks</td><td>{{ link.clicks|add:pending }}<span class="dim">
+      ({{ pending }} pending in cache)</span></td></tr>
+    <tr><td>created</td><td>{{ link.created_at }}</td></tr>
+    <tr><td>expires</td><td>{{ link.expires_at|default:"never (commitment)" }}</td></tr>
+    <tr><td>status</td><td>{% if link.deleted %}deceased{% else %}alive{% endif %}</td></tr>
+    <tr><td>owner</td><td>{{ link.created_by.user.username|default:"anonymous (a feral link)" }}</td></tr>
+  </table>
+  <img class="qr" src="data:image/png;base64,{{ qr_b64 }}" alt="qr code">
+</div>
+
+<div class="card">
+  <h3>daily clicks</h3>
+  <table>
+    <tr><th>day</th><th>clicks</th></tr>
+    {% for d in daily %}
+    <tr><td>{{ d.date }}</td><td>{{ d.count }}</td></tr>
+    {% empty %}
+    <tr><td colspan="2" class="dim">nobody has clicked. it's quiet. too quiet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h3>top referrers</h3>
+  <table>
+    <tr><th>referrer</th><th>clicks</th></tr>
+    {% for r in referrers %}
+    <tr><td>{{ r.name }}</td><td>{{ r.count }}</td></tr>
+    {% empty %}
+    <tr><td colspan="2" class="dim">The Void (100%)</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% if can_delete %}
+<div class="card">
+  <form method="post" action="{% url 'api-detail' link.id %}"
+        onsubmit="return fetchDelete(this); return false;">
+    {% csrf_token %}
+    <button type="submit" style="background:var(--danger)">put this link down</button>
+    <div class="dim">deletion is forever. editing is not a thing. choose wisely.</div>
+  </form>
+</div>
+<script>
+async function fetchDelete(form) {
+  const res = await fetch(form.action, {
+    method: "DELETE",
+    headers: {"X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value},
+    credentials: "same-origin",
+  });
+  if (res.status === 204) { location.reload(); }
+  else { alert("it refused to die: " + res.status); }
+}
+</script>
+{% endif %}
+{% endblock %}

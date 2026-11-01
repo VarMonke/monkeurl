@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}link not found{% endblock %}
+{% block content %}
+<div class="card">
+  <h3>gone.</h3>
+  <p>{{ reason }}</p>
+  <p class="dim">requested: /{{ code }}/</p>
+  <p><a href="/">adopt a new link instead →</a></p>
+</div>
+{% endblock %}

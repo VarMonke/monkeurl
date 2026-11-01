@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }} — monkeurl{% endblock %}
+{% block content %}
+<div class="card">
+  <h3>{{ user.username }}</h3>
+  <div class="dim">{{ links.count }} link{{ links.count|pluralize:"s" }}
+  adopted</div>
+</div>
+
+<div class="card">
+  <table class="links-table">
+    <colgroup>
+      <col style="width: 12%">
+      <col style="width: 48%">
+      <col style="width: 12%">
+      <col style="width: 16%">
+      <col style="width: 12%">
+    </colgroup>
+    <thead>
+      <tr><th>code</th><th>destination</th><th class="clicks">clicks</th>
+          <th>status</th><th class="action"></th></tr>
+    </thead>
+    <tbody>
+    {% for link in links %}
+    <tr>
+      <td>{{ link.id }}</td>
+      <td class="dim destination" title="{{ link.origin }}">{{ link.origin }}</td>
+      <td class="clicks">{{ link.clicks }}</td>
+      <td>{% if link.deleted %}deceased{% elif link.is_expired %}expired{% else %}alive{% endif %}</td>
+      <td class="action"><a href="{% url 'stats' link.id %}">stats →</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="dim">no links yet. the shelter is empty.
+        <a href="/">adopt one →</a></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

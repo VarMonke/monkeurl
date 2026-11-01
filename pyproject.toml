@@ -1,0 +1,26 @@
+[project]
+name = "csa-t2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cachetools>=7.2.8",
+    "django>=5.2,<6.2",
+    "django-allauth>=65.21.1",
+    "djangorestframework>=3.18.3",
+    "gunicorn>=26.2.0",
+    "pillow>=13.0.0",
+    "psycopg[binary]>=3.3.6",
+    "pyjwt[crypto]>=2.15.1",
+    "qrcode>=8.2",
+    "redis>=8.1.0",
+    "requests>=2.34.2",
+    "whitenoise>=6.12.0",
+]
+
+[dependency-groups]
+dev = [
+    "fakeredis>=2.40.0",
+    "pytest-django>=4.14.0",
+]

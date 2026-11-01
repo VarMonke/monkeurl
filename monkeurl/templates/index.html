@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <form method="post" action="/">
+    {% csrf_token %}
+    <label>long URL <span class="dim">(the uglier, the better)</span></label>
+    <input type="url" name="origin" placeholder="https://example.com/a/very/long/path?with=stuff" required>
+
+    <label>custom alias <span class="dim">(optional; first come, first served)</span></label>
+    <input type="text" name="alias" maxlength="64" placeholder="my-link">
+
+    <label>expires after <span class="dim">(optional)</span></label>
+    <select name="ttl_seconds">
+      <option value="">never (commitment)</option>
+      <option value="3600">1 hour (confidence)</option>
+      <option value="86400">1 day (commitment issues)</option>
+      <option value="604800">1 week (we'll see)</option>
+      <option value="2592000">30 days (optimist)</option>
+    </select>
+
+    <button type="submit">adopt a link</button>
+  </form>
+</div>
+
+{% if error %}
+<div class="card"><span class="error">{{ error }}</span></div>
+{% endif %}
+
+{% if link %}
+<div class="card">
+  <div class="ok">adopted: <a href="{{ short_url }}">{{ short_url }}</a></div>
+  <div class="dim"><a href="{% url 'stats' link.id %}">stats for this link →</a>
+  {% if link.expires_at %} · expires {{ link.expires_at }}{% endif %}</div>
+</div>
+{% endif %}
+{% endblock %}

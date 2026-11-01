@@ -1,0 +1,17 @@
+target: http://localhost:8000   workers: 200
+==============================================================================
+phase 1: base link /lt-base-6ae6ea00/ created
+  phase 2: alias race (same alias)       n= 200  p50=  273.1ms  p95=  307.2ms  max=  311.4ms  201s=1 409s=199 other=0
+  phase 3: distinct creates              n= 200  p50=  131.3ms  p95=  218.0ms  max=  238.2ms  created=200/200
+  phase 4: click storm x600              n= 600  p50=   25.2ms  p95=   57.4ms  max=   83.0ms  redirects=600
+  waiting for click buffer to flush (SHORTENER_FLUSH_INTERVAL, timeout 90s)...
+  flushed: clicks=600 pending=0 expected=600 -> PASS
+  phase 6: rate limit (shared IP)        n=  10  p50=   19.2ms  p95=   22.4ms  max=   22.4ms  {201: 5, 429: 5} -> PASS
+phase 7: cold vs warm redirect latency
+    cold (first hit, db->cache fill)     n=  25  p50=    1.3ms  p95=    1.6ms  max=    1.7ms  
+    warm (lru/redis hit)                 n= 100  p50=    0.9ms  p95=    1.1ms  max=    1.2ms  ~1.5x faster at p50
+==============================================================================
+  [PASS] exactly one winner in the alias race
+  [PASS] all 600 clicks counted exactly once
+  [PASS] rate limiter rejected excess same-IP creates
+==============================================================================

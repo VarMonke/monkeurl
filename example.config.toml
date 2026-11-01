@@ -1,0 +1,10 @@
+# Local-dev fallback for settings. env vars always win; the container
+# image never sees this file (.dockerignore excludes it).
+[django]
+DEBUG = true
+SECRET_KEY = "dev-only-not-a-real-secret"
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+[google]
+CLIENT_ID = ""
+CLIENT_SECRET = ""
