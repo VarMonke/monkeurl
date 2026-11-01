@@ -31,7 +31,7 @@ services:
       DATABASE_URL: postgres://monkeurl:${POSTGRES_PASSWORD:-monkeurl-dev}@db:5432/monkeurl
       REDIS_URL: redis://redis:6379/0
     ports:
-      - "${PORT:-8000}:8000"
+      - "127.0.0.1:${PORT:-8000}:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -42,6 +42,21 @@ services:
       interval: 15s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_started
     restart: unless-stopped
 
   flusher:
@@ -61,3 +76,5 @@ services:
 volumes:
   pgdata:
   redisdata:
+  caddy_data:
+  caddy_config:
